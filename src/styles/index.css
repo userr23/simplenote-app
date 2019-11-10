@@ -1,0 +1,62 @@
+.small-container {
+    max-width: 40em;
+}
+
+h1 {
+    color: lightsteelblue;
+    text-align: center;
+}
+
+label {
+    margin: 0;
+    color: slategray;
+    font-size: 0.8em;
+    font-weight: normal;
+}
+
+form {
+    margin-bottom: 2em;
+}
+
+.items {
+    box-sizing: border-box;
+    padding: 0;
+    color: slategray;
+    background-color: aliceblue;
+    border-radius: 0.5em;
+}
+
+.items h2 {
+    margin: 0.5rem 0 0.5rem -0.5em;
+    text-transform: uppercase;
+    text-align: center;
+    color: lightsteelblue;
+}
+
+.items ul {
+    padding: 0.5em;
+}
+
+.items li {
+    margin: 0.5em;
+    padding: 0.5em;
+    list-style-type: none;
+    background-color: rgba(224, 236, 247, 0.938);
+    border-radius: 0.5em;
+}
+
+#container-set {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap-reverse;
+    margin-top: 0.5em;
+    padding-bottom: 1em;
+}
+
+#checkboxes {
+    margin-top: 0.5em;
+}
+
+#button-add {
+    margin-top: 0.5em;
+}

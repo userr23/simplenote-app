@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>SimpleNote App</title>
+</head>
+
+<body>
+<div class="small-container">
+    <h1>SimpleNote App</h1>
+
+    <form>
+        <label>
+            New note
+            <input id="item" type="text" autocomplete="off" placeholder="Type your text here">
+        </label>
+        <div id="container-set">
+            <button id="button-add">Add Note</button>
+            <div id="checkboxes">
+                <label>
+                    <input id="autoComplete" type="checkbox">
+                    Input autocomplete
+                </label>
+                <label>
+                    <input id="checkDate" type="checkbox" checked>
+                    Add current date and time
+                </label>
+            </div>
+        </div>
+    </form>
+
+    <button class="accent-button" id="button-test">Generate Test Note</button>
+    <button class="muted-button" id="button-clear">Clear All</button>
+    <button class="muted-button" id="button-download">Download as PDF</button>
+
+    <div class="items">
+        <h2>Notes</h2>
+        <ul> </ul>
+    </div>
+</div>
+</body>
+
+</html>
+<!doctype html>
