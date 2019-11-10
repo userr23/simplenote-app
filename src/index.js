@@ -74,7 +74,7 @@ buttonClear.addEventListener( 'click', () => {
 } );
 
 buttonTest.addEventListener( 'click', () => {
-    const lorem        = loremGenerator( 2 );
+    const lorem        = loremGenerator( 1 );
     const item         = lorem.substring( 0, getRandomArbitrary( 50, lorem.length ) );
     const testItem     = notePrefix.checked ? `${getDate( '/' )} ${getTime( '-' )}: ${item}` : `${item}`;
     const newItemColor = randomColor( ITEM_COLOR );
