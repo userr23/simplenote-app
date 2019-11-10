@@ -5,12 +5,14 @@ import getDate                from './utils/getDate';
 import getTime                from './utils/getTime';
 import loremGenerator         from './utils/loremGenerator';
 import Storage                from './utils/Storage';
+import randomColor            from './utils/randomColor';
 import { getRandomArbitrary } from './utils/util';
 
 import './styles/main.min.css';
 import './styles/index.css';
 
 const CACHE_NAME = 'notes';
+const ITEM_COLOR = 'rgba(224, 236, 247, 0.938)';
 
 const form           = document.querySelector( 'form' );
 const input          = document.getElementById( 'item' );
@@ -20,11 +22,13 @@ const ul             = document.querySelector( 'ul' );
 const buttonTest     = document.getElementById( 'button-test' );
 const buttonClear    = document.getElementById( 'button-clear' );
 const buttonDownload = document.getElementById( 'button-download' );
-let itemsArray       = localStorage.getItem( 'notes' ) ? JSON.parse( localStorage.getItem( 'notes' ) ) : [];
+let itemsArray       = Storage.get( CACHE_NAME ) ? Storage.get( CACHE_NAME ) : [];
 
 
 Storage.set( CACHE_NAME, itemsArray );
 const data = Storage.get( CACHE_NAME );
+
+document.body.style.setProperty( '--item-color', ITEM_COLOR );
 
 autoComplete.addEventListener( 'change', () => {
     autoComplete.checked
@@ -45,8 +49,7 @@ form.addEventListener( 'submit', e => {
         const newItem      = notePrefix.checked
             ? `${getDate( '/' )} ${getTime( '-' )}: ${input.value}`
             : `${input.value}`;
-        const newItemColor = `rgba(${224 * getRandomArbitrary( 0.97, 1 )}, ${236 *
-        getRandomArbitrary( 0.93, 1 )}, ${247 * getRandomArbitrary( 0.99, 1 )}, 0.938)`;
+        const newItemColor = randomColor( ITEM_COLOR );
 
         itemsArray.push( newItem );
         Storage.set( CACHE_NAME, itemsArray );
@@ -71,11 +74,10 @@ buttonClear.addEventListener( 'click', () => {
 } );
 
 buttonTest.addEventListener( 'click', () => {
-    const lorem        = loremGenerator( 1 );
+    const lorem        = loremGenerator( 2 );
     const item         = lorem.substring( 0, getRandomArbitrary( 50, lorem.length ) );
     const testItem     = notePrefix.checked ? `${getDate( '/' )} ${getTime( '-' )}: ${item}` : `${item}`;
-    const newItemColor = `rgba(${224 * getRandomArbitrary( 0.97, 1 )}, ${236 * getRandomArbitrary( 0.93, 1 )}, ${247 *
-    getRandomArbitrary( 0.99, 1 )}, 0.938)`;
+    const newItemColor = randomColor( ITEM_COLOR );
 
     itemsArray.push( testItem );
     Storage.set( CACHE_NAME, itemsArray );
