@@ -1,8 +1,16 @@
 import * as JsPDF from 'jspdf';
 import './fonts/Cormorant-Regular-normal';
 
+import getDate                from './utils/getDate';
+import getTime                from './utils/getTime';
+import loremGenerator         from './utils/loremGenerator';
+import Storage                from './utils/Storage';
+import { getRandomArbitrary } from './utils/util';
+
 import './styles/main.min.css';
 import './styles/index.css';
+
+const CACHE_NAME = 'notes';
 
 const form           = document.querySelector( 'form' );
 const input          = document.getElementById( 'item' );
@@ -14,8 +22,9 @@ const buttonClear    = document.getElementById( 'button-clear' );
 const buttonDownload = document.getElementById( 'button-download' );
 let itemsArray       = localStorage.getItem( 'notes' ) ? JSON.parse( localStorage.getItem( 'notes' ) ) : [];
 
-localStorage.setItem( 'notes', JSON.stringify( itemsArray ) );
-const data = JSON.parse( localStorage.getItem( 'notes' ) );
+
+Storage.set( CACHE_NAME, itemsArray );
+const data = Storage.get( CACHE_NAME );
 
 autoComplete.addEventListener( 'change', () => {
     autoComplete.checked
@@ -40,7 +49,7 @@ form.addEventListener( 'submit', e => {
         getRandomArbitrary( 0.93, 1 )}, ${247 * getRandomArbitrary( 0.99, 1 )}, 0.938)`;
 
         itemsArray.push( newItem );
-        localStorage.setItem( 'notes', JSON.stringify( itemsArray ) );
+        Storage.set( CACHE_NAME, itemsArray );
         listMaker( newItem, newItemColor );
         input.value = '';
         input.focus();
@@ -54,7 +63,7 @@ data.forEach( item => {
 } );
 
 buttonClear.addEventListener( 'click', () => {
-    localStorage.clear();
+    Storage.remove( CACHE_NAME );
     while ( ul.firstChild ) {
         ul.removeChild( ul.firstChild );
     }
@@ -69,7 +78,7 @@ buttonTest.addEventListener( 'click', () => {
     getRandomArbitrary( 0.99, 1 )}, 0.938)`;
 
     itemsArray.push( testItem );
-    localStorage.setItem( 'notes', JSON.stringify( itemsArray ) );
+    Storage.set( CACHE_NAME, itemsArray );
     listMaker( testItem, newItemColor );
 } );
 
@@ -118,43 +127,3 @@ buttonDownload.addEventListener( 'click', () => {
 
     pdf.save( `Notes_${getDate()}-${getTime()}.pdf` );
 } );
-
-
-//helpers
-
-function getRandomArbitrary ( min, max ) {
-    return Math.random() * ( max - min ) + min;
-}
-
-function getDate ( separator = '' ) {
-    const today = new Date();
-    const month = today.getMonth() < 9 ? '0' + ( today.getMonth() + 1 ) : today.getMonth() + 1;
-    const date  = today.getDate() < 10 ? '0' + today.getDate() : today.getDate();
-
-    return today.getFullYear() + separator + month + separator + date;
-}
-
-function getTime ( separator = '' ) {
-    const today   = new Date();
-    const hours   = today.getHours() < 10 ? '0' + today.getHours() : today.getHours();
-    const minutes = today.getMinutes() < 10 ? '0' + today.getMinutes() : today.getMinutes();
-    const seconds = today.getSeconds() < 10 ? '0' + today.getSeconds() : today.getSeconds();
-
-    return hours + separator + minutes + separator + seconds;
-}
-
-function loremGenerator ( paras ) {
-    const lorem = 'Lorem ipsum vivamus commodo amet odio enim ipsum duis lorem bibendum integer malesuada. Sagittis' +
-        ' tempus, eget a, proin metus bibendum congue ornare nec bibendum, mauris malesuada rutrum enim sem mattis' +
-        ' auctor, orci diam lorem, commodo quisque congue gravida. Leo ipsum urna donec porttitor gravida nibh in, sit' +
-        ' enim magna. Arcu sit commodo odio vivamus proin maecenas tempus eros, arcu eget: integer metus - sit ut, nam' +
-        ' at massa orci ornare orci risus orci, lorem sit. Urna at - sem maecenas bibendum justo, nibh, ornare porta' +
-        ' malesuada, eget magna non in diam odio morbi - mattis magna integer cursus.';
-    let res     = '';
-    for ( let i = 0; i < paras; i++ ) {
-        res += lorem;
-    }
-    return res;
-}
-
-
