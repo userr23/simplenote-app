@@ -1,4 +1,4 @@
 # SimpleNote App
 
-An application to create simple notes and print them to PDF.
+An application to create simple notes and export them to PDF.
 
