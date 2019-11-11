@@ -85,8 +85,7 @@ buttonTest.addEventListener( 'click', () => {
 } );
 
 buttonDownload.addEventListener( 'click', () => {
-    const arrReverse = itemsArray.reverse();
-    const itemsList  = arrReverse.reduce( ( res, item ) => {
+    const itemsList  = [...itemsArray].reverse().reduce( ( res, item ) => {
         res += item + '\n\n';
         return res;
     }, '' );
