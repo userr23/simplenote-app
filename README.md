@@ -1,6 +1,6 @@
 # [SimpleNote App](https://userr23.github.io/simplenote-app/)
 
-![code size](https://img.shields.io/github/languages/code-size/userr23/simplenote-app)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT) [![code size](https://img.shields.io/github/languages/code-size/userr23/simplenote-app)](https://img.shields.io/github/languages/code-size/userr23/simplenote-app)
 
 An application to make simple notes and export them to PDF.
 
