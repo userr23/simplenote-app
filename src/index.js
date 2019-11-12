@@ -85,6 +85,7 @@ buttonTest.addEventListener( 'click', () => {
 } );
 
 buttonDownload.addEventListener( 'click', () => {
+    if ( itemsArray.length > 0 ) {
     const itemsList  = [...itemsArray].reverse().reduce( ( res, item ) => {
         res += item + '\n\n';
         return res;
@@ -127,4 +128,5 @@ buttonDownload.addEventListener( 'click', () => {
     pdf.text( pageWidth / 2 - 10, pageHeight - 20, `- ${pages} -` );
 
     pdf.save( `Notes_${getDate()}-${getTime()}.pdf` );
+    }
 } );
