@@ -5,7 +5,7 @@
  *
  * @param {string}  separator     Description. Separator (default empty string)
  *
- * @return {string} Description. Date YYYYMMDD with custom separator
+ * @return {string} Description. Date in "YYYYMMDD" format with custom separator
  */
 export default function getDate ( separator = '' ) {
     const today = new Date();

@@ -5,7 +5,7 @@
  *
  * @param {string}  separator     Description. Separator (default empty string)
  *
- * @return {string} Description. Time HHMMSS with custom separator
+ * @return {string} Description. Time in "hhmmss" format with custom separator
  */
 export default function getTime ( separator = '' ) {
     const today   = new Date();

@@ -1,3 +1,5 @@
+import { getRandomIntInclusive, toFixed } from './util';
+
 /**
  * Summary. summary
  *
@@ -15,8 +17,12 @@ export default function loremGenerator ( paras ) {
         ' at massa orci ornare orci risus orci, lorem sit. Urna at - sem maecenas bibendum justo, nibh, ornare porta' +
         ' malesuada, eget magna non in diam odio morbi - mattis magna integer cursus.';
     let res     = '';
+
     for ( let i = 0; i < paras; i++ ) {
         res += lorem;
     }
-    return res;
+
+    const randomPart = res.substring( 0, toFixed( getRandomIntInclusive( 110, res.length ), 0 ) );
+
+    return randomPart.slice( 0, randomPart.lastIndexOf( '.' ) + 1 );
 }
