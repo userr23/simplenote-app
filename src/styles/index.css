@@ -2,11 +2,6 @@
     --item-color: rgba(216, 235, 255, 0.938);
 }
 
-.small-container {
-    width: 40rem;
-    max-width: 95vw;
-}
-
 h1 {
     margin-bottom: 1rem;
     color: lightsteelblue;
@@ -21,7 +16,36 @@ label {
 }
 
 form {
-    margin-bottom: 1rem;
+    margin-bottom: 0.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #DEDEDE;
+}
+
+button {
+    margin-right: 0.4rem;
+}
+
+.small-container {
+    width: 45rem;
+    max-width: 95vw;
+}
+
+.container-set {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap-reverse;
+    margin-top: 0.5rem;
+    padding-bottom: 0.5rem;
+}
+
+.btn-group {
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 0.5rem;
+}
+
+.checkboxes {
+    margin-top: 0.5rem;
 }
 
 .items {
@@ -47,24 +71,22 @@ form {
     margin: 0.5rem 0 0;
     padding: 0.5rem;
     list-style-type: none;
-    /*color: #35597F;*/
     color: #545F75;
     background-color: var(--item-color);
     border-radius: 0.5rem;
 }
 
-#container-set {
-    display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap-reverse;
-    margin-top: 0.5rem;
-    padding-bottom: 1rem;
-}
+@media screen and (max-width: 700px) {
+    :root {
+        font-size: 14px;
+    }
 
-#checkboxes {
-    margin-top: 0.5rem;
-}
+    form {
+        margin-bottom: 0.5rem;
+        padding-bottom: 0.4rem;
+    }
 
-#button-add {
-    margin-top: 0.5rem;
+    button {
+        font-size: 0.9rem;
+    }
 }

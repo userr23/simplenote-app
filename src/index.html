@@ -17,9 +17,13 @@
             New note
             <input id="item" type="text" autocomplete="off" placeholder="Type your text here">
         </label>
-        <div id="container-set">
-            <button id="button-add">Add Note</button>
-            <div id="checkboxes">
+        <div class="container-set">
+            <div class="btn-group">
+                <button id="button-add">Add Note</button>
+                <button class="accent-button" id="button-test">Generate Test Note</button>
+                <button class="muted-button" id="button-clear">Clear All</button>
+            </div>
+            <div class="checkboxes">
                 <label>
                     <input id="autoComplete" type="checkbox">
                     Input autocomplete
@@ -32,13 +36,21 @@
         </div>
     </form>
 
-    <button class="accent-button" id="button-test">Generate Test Note</button>
-    <button class="muted-button" id="button-clear">Clear All</button>
-    <button class="muted-button" id="button-download">Download as PDF</button>
-
+    <div class="container-set">
+        <div class="btn-group">
+            <button class="muted-button" id="button-download">Download as PDF</button>
+        </div>
+        <div class="checkboxes">
+            Export to PDF options:
+            <label>
+                <input id="sort" type="checkbox" checked>
+                Sort Items Descending (pdf)
+            </label>
+        </div>
+    </div>
     <div class="items">
         <h2>Notes</h2>
-        <ul> </ul>
+        <ul></ul>
     </div>
 </div>
 </body>

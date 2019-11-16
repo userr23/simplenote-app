@@ -4,10 +4,10 @@ export function encode ( data ) {
     let result;
 
     try {
-        result = window.btoa( JSON.stringify( data ) )
-            .replace( /[=]/g, '' )
-            .replace( /[+]/g, '-' )
-            .replace( /[/]/g, '_' );
+        result = window.btoa( utoa( JSON.stringify( data ) ) )
+                       .replace( /[=]/g, '' )
+                       .replace( /[+]/g, '-' )
+                       .replace( /[/]/g, '_' );
     } catch ( e ) {
         logger.error( `Encoding error for '${JSON.stringify( data )}': ${e.message}` );
     }
@@ -33,7 +33,7 @@ export function decode ( string ) {
             .replace( /-/g, '+' )
             .replace( /_/g, '/' );
 
-        result = JSON.parse( window.atob( string ) );
+        result = JSON.parse( atou( window.atob( string ) ) );
     } catch ( e ) {
         logger.error( `Decoding error for '${string}': ${e.message}` );
     }
@@ -55,4 +55,14 @@ function padString ( string ) {
     }
 
     return result;
+}
+
+// ucs-2 string to base64 encoded ascii
+function utoa ( str ) {
+    return window.btoa( unescape( encodeURIComponent( str ) ) );
+}
+
+// base64 encoded ascii to ucs-2 string
+function atou ( str ) {
+    return decodeURIComponent( escape( window.atob( str ) ) );
 }
