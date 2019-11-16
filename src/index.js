@@ -1,11 +1,11 @@
 import * as JsPDF from 'jspdf';
 import './fonts/Cormorant-Regular-normal';
 
-import getDate                from './utils/getDate';
-import getTime                from './utils/getTime';
-import loremGenerator         from './utils/loremGenerator';
-import Storage                from './utils/Storage';
-import randomColor            from './utils/randomColor';
+import getDate        from './utils/getDate';
+import getTime        from './utils/getTime';
+import loremGenerator from './utils/loremGenerator';
+import Storage        from './utils/Storage';
+import randomColor    from './utils/randomColor';
 
 import './styles/main.min.css';
 import './styles/index.css';
@@ -27,7 +27,7 @@ let itemsArray       = Storage.get( CACHE_NAME ) ? Storage.get( CACHE_NAME ) : [
 Storage.set( CACHE_NAME, itemsArray );
 const data = Storage.get( CACHE_NAME );
 
-document.body.style.setProperty( '--item-color', ITEM_COLOR );
+document.documentElement.style.setProperty( '--item-color', ITEM_COLOR );
 
 autoComplete.addEventListener( 'change', () => {
     autoComplete.checked
