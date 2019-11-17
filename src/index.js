@@ -101,11 +101,9 @@ function listItemGenerator ( list, item, bgColor ) {
     span.textContent     = text;
     li.setAttribute( 'class', 'item' );
     li.setAttribute( 'id', id );
-    deleteButton.setAttribute( 'class', 'muted-button' );
-    deleteButton.setAttribute( 'id', 'delete-btn' );
+    deleteButton.setAttribute( 'class', 'muted-button delete-btn' );
     deleteButton.textContent = '\u2715';
-    editButton.setAttribute( 'class', 'muted-button' );
-    editButton.setAttribute( 'id', 'edit-btn' );
+    editButton.setAttribute( 'class', 'muted-button edit-btn' );
     editButton.textContent = '\u270E';
 
     bgColor && ( li.style.backgroundColor = bgColor );
