@@ -1,9 +1,10 @@
-import getDate        from './utils/getDate';
-import getTime        from './utils/getTime';
-import loremGenerator from './utils/loremGenerator';
-import pdfGenerator   from './utils/pdfGenerator';
-import Storage        from './utils/Storage';
-import randomColor    from './utils/randomColor';
+import getDate                         from './utils/getDate';
+import getTime                         from './utils/getTime';
+import loremGenerator                  from './utils/loremGenerator';
+import pdfGenerator                    from './utils/pdfGenerator';
+import Storage                         from './utils/Storage';
+import randomColor                     from './utils/randomColor';
+import { getRandomArbitrary, toFixed } from './utils/util';
 
 import './styles/main.min.css';
 import './styles/index.css';
@@ -38,10 +39,12 @@ document.addEventListener( 'DOMContentLoaded', () => {
     form.addEventListener( 'submit', e => {
         e.preventDefault();
         if ( input.value ) {
-            const newItem      = notePrefix.checked
+            const text         = notePrefix.checked
                 ? `${getDate( '/' )} ${getTime( '-' )}: ${input.value}`
                 : `${input.value}`;
             const newItemColor = randomColor( ITEM_COLOR );
+            const id           = `${getDate()}${getTime()}_${toFixed( getRandomArbitrary( 10, 99 ), 0 )}`;
+            const newItem      = { id: id, text: text };
 
             itemsArray.push( newItem );
             Storage.set( CACHE_NAME, itemsArray );
@@ -65,11 +68,13 @@ document.addEventListener( 'DOMContentLoaded', () => {
     } );
 
     buttonTest.addEventListener( 'click', () => {
-        const item         = loremGenerator( 1 );
-        const testItem     = notePrefix.checked
-            ? `${getDate( '/' )} ${getTime( '-' )}: ${item}`
-            : `${item}`;
+        const lorem        = loremGenerator( 1 );
+        const text         = notePrefix.checked
+            ? `${getDate( '/' )} ${getTime( '-' )}: ${lorem}`
+            : `${lorem}`;
         const newItemColor = randomColor( ITEM_COLOR );
+        const id           = `${getDate()}${getTime()}_${toFixed( getRandomArbitrary( 10, 99 ), 0 )}`;
+        const testItem     = { id: id, text: text };
 
         itemsArray.push( testItem );
         Storage.set( CACHE_NAME, itemsArray );
@@ -77,16 +82,78 @@ document.addEventListener( 'DOMContentLoaded', () => {
     } );
 
     buttonDownload.addEventListener( 'click', () => {
-        pdfGenerator( itemsArray, sortDescending.checked );
+        pdfGenerator( Storage.get( CACHE_NAME ), sortDescending.checked );
     } );
 } );
 
-// helper
+// helpers
 
-function listItemGenerator ( list, text, bgColor ) {
-    const li = document.createElement( 'li' );
+function listItemGenerator ( list, item, bgColor ) {
+    const li           = document.createElement( 'li' );
+    const span         = document.createElement( 'span' );
+    const div          = document.createElement( 'div' );
+    const deleteButton = document.createElement( 'button' );
+    const editButton   = document.createElement( 'button' );
+    const { id, text } = item;
 
-    li.textContent = text;
+    span.setAttribute( 'class', 'item-content' );
+    span.contentEditable = 'false';
+    span.textContent     = text;
+    li.setAttribute( 'class', 'item' );
+    li.setAttribute( 'id', id );
+    deleteButton.setAttribute( 'class', 'muted-button' );
+    deleteButton.setAttribute( 'id', 'delete-btn' );
+    deleteButton.textContent = '\u2715';
+    editButton.setAttribute( 'class', 'muted-button' );
+    editButton.setAttribute( 'id', 'edit-btn' );
+    editButton.textContent = '\u270E';
+
     bgColor && ( li.style.backgroundColor = bgColor );
+    div.appendChild( editButton );
+    div.appendChild( deleteButton );
+    li.appendChild( span );
+    li.appendChild( div );
+
     list.insertBefore( li, list.childNodes[ 0 ] );
+
+    listenEditItem( editButton );
+    listenDeleteItem( deleteButton );
 }
+
+function listenEditItem ( element ) {
+    element.addEventListener( 'click', e => {
+        const itemToEdit = element.closest( '.item' );
+        if ( element.closest( '.item' ).firstChild.contentEditable === 'false' ) {
+            element.closest( '.item' ).firstChild.contentEditable = 'true';
+            element.closest( '.item' ).firstChild.setAttribute( 'class', 'edit' );
+            e.target.textContent = '\u2713';
+        } else {
+            const storedData = Storage.get( CACHE_NAME );
+            const editedData = storedData.map( item => {
+                if ( itemToEdit.id === item.id ) {
+                    item.text = element.closest( '.item' ).firstChild.textContent;
+                }
+                return item;
+            } );
+
+            Storage.set( CACHE_NAME, editedData );
+            element.closest( '.item' ).firstChild.contentEditable = 'false';
+            element.closest( '.item' ).firstChild.removeAttribute( 'class' );
+            e.target.textContent = '\u270E';
+        }
+        e.stopPropagation();
+    } );
+}
+
+function listenDeleteItem ( element ) {
+    element.addEventListener( 'click', e => {
+        const itemToRemove = element.closest( '.item' );
+        const storedData   = Storage.get( CACHE_NAME );
+        const filteredData = storedData.filter( item => item.id !== itemToRemove.id );
+
+        Storage.set( CACHE_NAME, filteredData );
+        element.closest( '.item' ).remove();
+        e.stopPropagation();
+    } );
+}
+
