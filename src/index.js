@@ -23,9 +23,11 @@ document.addEventListener( 'DOMContentLoaded', () => {
     const buttonClear    = document.getElementById( 'button-clear' );
     const buttonDownload = document.getElementById( 'button-download' );
     const sortDescending = document.getElementById( 'sort' );
-    let itemsArray       = Storage.get( CACHE_NAME ) ? Storage.get( CACHE_NAME ) : [];
 
-    Storage.set( CACHE_NAME, itemsArray );
+    if ( !Storage.get( CACHE_NAME ) ) {
+        Storage.set( CACHE_NAME, [] );
+    }
+
     const data = Storage.get( CACHE_NAME );
 
     document.documentElement.style.setProperty( '--item-color', ITEM_COLOR );
@@ -39,6 +41,7 @@ document.addEventListener( 'DOMContentLoaded', () => {
     form.addEventListener( 'submit', e => {
         e.preventDefault();
         if ( input.value ) {
+            let itemsArray     = Storage.get( CACHE_NAME );
             const text         = notePrefix.checked
                 ? `${getDate( '/' )} ${getTime( '-' )}: ${input.value}`
                 : `${input.value}`;
@@ -64,10 +67,10 @@ document.addEventListener( 'DOMContentLoaded', () => {
         while ( ul.firstChild ) {
             ul.removeChild( ul.firstChild );
         }
-        itemsArray = [];
     } );
 
     buttonTest.addEventListener( 'click', () => {
+        let itemsArray     = Storage.get( CACHE_NAME );
         const lorem        = loremGenerator( 1 );
         const text         = notePrefix.checked
             ? `${getDate( '/' )} ${getTime( '-' )}: ${lorem}`
