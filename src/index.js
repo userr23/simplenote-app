@@ -15,7 +15,7 @@ const ITEM_COLOR = 'rgba(224, 236, 247, 0.938)';
 
 document.addEventListener( 'DOMContentLoaded', () => {
     const form           = document.querySelector( 'form' );
-    const input          = document.getElementById( 'item' );
+    const input          = document.getElementById( 'item-input' );
     const autoComplete   = document.getElementById( 'autoComplete' );
     const notePrefix     = document.getElementById( 'checkDate' );
     const ul             = document.querySelector( 'ul' );
@@ -24,11 +24,11 @@ document.addEventListener( 'DOMContentLoaded', () => {
     const buttonDownload = document.getElementById( 'button-download' );
     const sortDescending = document.getElementById( 'sort' );
 
-    if ( !Storage.get( CACHE_NAME ) ) {
+    /*if ( !Storage.get( CACHE_NAME ) ) {
         Storage.set( CACHE_NAME, [] );
-    }
+    }*/
 
-    const data = Storage.get( CACHE_NAME );
+    const data = Storage.get( CACHE_NAME ) ? Storage.get( CACHE_NAME ) : [];
 
     document.documentElement.style.setProperty( '--item-color', ITEM_COLOR );
 
@@ -41,7 +41,7 @@ document.addEventListener( 'DOMContentLoaded', () => {
     form.addEventListener( 'submit', e => {
         e.preventDefault();
         if ( input.value ) {
-            let itemsArray     = Storage.get( CACHE_NAME );
+            let itemsArray     = Storage.get( CACHE_NAME ) ? Storage.get( CACHE_NAME ) : [];
             const text         = notePrefix.checked
                 ? `${getDate( '/' )} ${getTime( '-' )}: ${input.value}`
                 : `${input.value}`;
@@ -70,7 +70,7 @@ document.addEventListener( 'DOMContentLoaded', () => {
     } );
 
     buttonTest.addEventListener( 'click', () => {
-        let itemsArray     = Storage.get( CACHE_NAME );
+        let itemsArray     = Storage.get( CACHE_NAME ) ? Storage.get( CACHE_NAME ) : [];
         const lorem        = loremGenerator( 1 );
         const text         = notePrefix.checked
             ? `${getDate( '/' )} ${getTime( '-' )}: ${lorem}`
@@ -127,7 +127,8 @@ function listenEditItem ( element ) {
         if ( element.closest( '.item' ).firstChild.contentEditable === 'false' ) {
             element.closest( '.item' ).firstChild.contentEditable = 'true';
             element.closest( '.item' ).firstChild.setAttribute( 'class', 'edit' );
-            e.target.textContent = '\u2713';
+            e.target.textContent            = '\u2713';
+            element.nextSibling.textContent = '\u232B';
         } else {
             const storedData = Storage.get( CACHE_NAME );
             const editedData = storedData.map( item => {
@@ -140,7 +141,8 @@ function listenEditItem ( element ) {
             Storage.set( CACHE_NAME, editedData );
             element.closest( '.item' ).firstChild.contentEditable = 'false';
             element.closest( '.item' ).firstChild.removeAttribute( 'class' );
-            e.target.textContent = '\u270E';
+            e.target.textContent            = '\u270E';
+            element.nextSibling.textContent = '\u2715';
         }
         e.stopPropagation();
     } );
@@ -148,13 +150,28 @@ function listenEditItem ( element ) {
 
 function listenDeleteItem ( element ) {
     element.addEventListener( 'click', e => {
-        const itemToRemove = element.closest( '.item' );
-        const storedData   = Storage.get( CACHE_NAME );
-        const filteredData = storedData.filter( item => item.id !== itemToRemove.id );
+        const itemToEdit = element.closest( '.item' );
 
-        Storage.set( CACHE_NAME, filteredData );
-        element.closest( '.item' ).remove();
+        if ( element.closest( '.item' ).firstChild.contentEditable === 'true' ) {
+            const storedData = Storage.get( CACHE_NAME );
+
+            element.closest( '.item' ).firstChild.textContent     = storedData
+                .filter( item => itemToEdit.id === item.id )[ 0 ].text;
+            element.closest( '.item' ).firstChild.contentEditable = 'false';
+            element.closest( '.item' ).firstChild.removeAttribute( 'class' );
+            element.textContent = '\u2715';
+
+        } else {
+            const itemToRemove = element.closest( '.item' );
+            const storedData   = Storage.get( CACHE_NAME );
+            const filteredData = storedData.filter( item => item.id !== itemToRemove.id );
+
+            Storage.set( CACHE_NAME, filteredData );
+            element.closest( '.item' ).remove();
+
+        }
         e.stopPropagation();
-    } );
+    } )
+    ;
 }
 

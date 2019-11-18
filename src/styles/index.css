@@ -88,6 +88,7 @@ button {
     align-items: flex-start;
 }
 
+
 .delete-btn, .edit-btn {
     font-size: 1.2rem;
     padding: 0.5rem;
@@ -107,7 +108,7 @@ button {
 }
 
 .edit {
-    font-size: 1.2em;
+    font-size: 1.1em;
     background-color: #fff;
     padding: 0.5rem;
 }

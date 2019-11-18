@@ -5,7 +5,7 @@
   "main": "src/index.js",
   "dependencies": {
     "jspdf": "^1.5.3",
-    "npm": "^6.13.0"
+    "npm": "^6.13.1"
   },
   "devDependencies": {
     "@babel/core": "^7.7.2",
@@ -13,7 +13,7 @@
     "@babel/plugin-proposal-export-default-from": "^7.5.2",
     "@babel/preset-env": "^7.7.1",
     "@babel/preset-react": "^7.7.0",
-    "@cypress/webpack-preprocessor": "^4.1.0",
+    "@cypress/webpack-preprocessor": "^4.1.1",
     "autoprefixer": "^9.7.1",
     "babel-eslint": "^10.0.3",
     "babel-loader": "^8.0.6",
