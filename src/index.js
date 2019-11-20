@@ -92,12 +92,12 @@ document.addEventListener( 'DOMContentLoaded', () => {
 // helpers
 
 function listItemGenerator ( list, item, bgColor ) {
-    const li           = document.createElement( 'li' );
-    const span         = document.createElement( 'span' );
-    const div          = document.createElement( 'div' );
-    const deleteButton = document.createElement( 'button' );
-    const editButton   = document.createElement( 'button' );
-    const { id, text } = item;
+    const li             = document.createElement( 'li' );
+    const span           = document.createElement( 'span' );
+    const buttonsWrapper = document.createElement( 'div' );
+    const deleteButton   = document.createElement( 'button' );
+    const editButton     = document.createElement( 'button' );
+    const { id, text }   = item;
 
     span.setAttribute( 'class', 'item-content' );
     span.contentEditable = 'false';
@@ -110,13 +110,14 @@ function listItemGenerator ( list, item, bgColor ) {
     editButton.textContent = '\u270E';
 
     bgColor && ( li.style.backgroundColor = bgColor );
-    div.appendChild( editButton );
-    div.appendChild( deleteButton );
+    buttonsWrapper.appendChild( editButton );
+    buttonsWrapper.appendChild( deleteButton );
     li.appendChild( span );
-    li.appendChild( div );
+    li.appendChild( buttonsWrapper );
 
     list.insertBefore( li, list.childNodes[ 0 ] );
 
+    listenAction( li );
     listenEditItem( editButton );
     listenDeleteItem( deleteButton );
 }
@@ -175,3 +176,16 @@ function listenDeleteItem ( element ) {
     ;
 }
 
+function listenAction ( element ) {
+    element.addEventListener( 'click', e => {
+        if ( element.target === 'button' || element.firstChild.contentEditable === 'true' ) {
+            return;
+        }
+
+        const child = element.querySelector( 'div' );
+        child.getAttribute( 'class' )
+            ? child.removeAttribute( 'class' )
+            : child.setAttribute( 'class', 'visible' );
+        e.stopPropagation();
+    } );
+}
