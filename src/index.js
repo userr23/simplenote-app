@@ -14,26 +14,22 @@ const ITEM_COLOR = 'rgba(224, 236, 247, 0.938)';
 
 
 document.addEventListener( 'DOMContentLoaded', () => {
-    const form           = document.querySelector( 'form' );
-    const input          = document.getElementById( 'item-input' );
-    const autoComplete   = document.getElementById( 'autoComplete' );
-    const notePrefix     = document.getElementById( 'checkDate' );
-    const ul             = document.querySelector( 'ul' );
-    const buttonTest     = document.getElementById( 'button-test' );
-    const buttonClear    = document.getElementById( 'button-clear' );
-    const buttonDownload = document.getElementById( 'button-download' );
-    const sortDescending = document.getElementById( 'sort' );
-
-    /*if ( !Storage.get( CACHE_NAME ) ) {
-        Storage.set( CACHE_NAME, [] );
-    }*/
-
-    const data = Storage.get( CACHE_NAME ) ? Storage.get( CACHE_NAME ) : [];
+    const form              = document.querySelector( 'form' );
+    const input             = document.getElementById( 'item-input' );
+    const inputAutoComplete = document.getElementById( 'autoComplete' );
+    const notePrefix        = document.getElementById( 'checkDate' );
+    const notesList         = document.querySelector( 'ul' );
+    const testButton        = document.getElementById( 'button-test' );
+    const clearButton       = document.getElementById( 'button-clear' );
+    const downloadButton    = document.getElementById( 'button-download' );
+    const sortDescending    = document.getElementById( 'sort' );
+    const data              = Storage.get( CACHE_NAME ) ? Storage.get( CACHE_NAME ) : [];
 
     document.documentElement.style.setProperty( '--item-color', ITEM_COLOR );
+    input.focus();
 
-    autoComplete.addEventListener( 'change', () => {
-        autoComplete.checked
+    inputAutoComplete.addEventListener( 'change', () => {
+        inputAutoComplete.checked
             ? input.setAttribute( 'autocomplete', 'on' )
             : input.setAttribute( 'autocomplete', 'off' );
     } );
@@ -41,17 +37,17 @@ document.addEventListener( 'DOMContentLoaded', () => {
     form.addEventListener( 'submit', e => {
         e.preventDefault();
         if ( input.value ) {
-            let itemsArray     = Storage.get( CACHE_NAME ) ? Storage.get( CACHE_NAME ) : [];
+            let notesArray     = Storage.get( CACHE_NAME ) ? Storage.get( CACHE_NAME ) : [];
             const text         = notePrefix.checked
                 ? `${getDate( '/' )} ${getTime( '-' )}: ${input.value}`
                 : `${input.value}`;
             const newItemColor = randomColor( ITEM_COLOR );
             const id           = `${getDate()}${getTime()}_${toFixed( getRandomArbitrary( 10, 99 ), 0 )}`;
-            const newItem      = { id: id, text: text };
+            const newNote      = { id: id, text: text };
 
-            itemsArray.push( newItem );
-            Storage.set( CACHE_NAME, itemsArray );
-            listItemGenerator( ul, newItem, newItemColor );
+            notesArray.push( newNote );
+            Storage.set( CACHE_NAME, notesArray );
+            listItemGenerator( notesList, newNote, newItemColor );
             input.value = '';
             input.focus();
         }
@@ -59,33 +55,38 @@ document.addEventListener( 'DOMContentLoaded', () => {
 
 
     data.forEach( item => {
-        listItemGenerator( ul, item );
+        listItemGenerator( notesList, item );
     } );
 
-    buttonClear.addEventListener( 'click', () => {
+    clearButton.addEventListener( 'click', () => {
         Storage.remove( CACHE_NAME );
-        while ( ul.firstChild ) {
-            ul.removeChild( ul.firstChild );
+        while ( notesList.firstChild ) {
+            notesList.removeChild( notesList.firstChild );
         }
     } );
 
-    buttonTest.addEventListener( 'click', () => {
-        let itemsArray     = Storage.get( CACHE_NAME ) ? Storage.get( CACHE_NAME ) : [];
+    testButton.addEventListener( 'click', () => {
+        let notesArray     = Storage.get( CACHE_NAME ) ? Storage.get( CACHE_NAME ) : [];
         const lorem        = loremGenerator( 1 );
         const text         = notePrefix.checked
             ? `${getDate( '/' )} ${getTime( '-' )}: ${lorem}`
             : `${lorem}`;
         const newItemColor = randomColor( ITEM_COLOR );
         const id           = `${getDate()}${getTime()}_${toFixed( getRandomArbitrary( 10, 99 ), 0 )}`;
-        const testItem     = { id: id, text: text };
+        const testNote     = { id: id, text: text };
 
-        itemsArray.push( testItem );
-        Storage.set( CACHE_NAME, itemsArray );
-        listItemGenerator( ul, testItem, newItemColor );
+        notesArray.push( testNote );
+        Storage.set( CACHE_NAME, notesArray );
+        listItemGenerator( notesList, testNote, newItemColor );
     } );
 
-    buttonDownload.addEventListener( 'click', () => {
+    downloadButton.addEventListener( 'click', () => {
         pdfGenerator( Storage.get( CACHE_NAME ), sortDescending.checked );
+    } );
+
+    notesList.addEventListener( 'click', e => {
+        e.preventDefault();
+        editCurrentNote( e );
     } );
 } );
 
@@ -116,76 +117,63 @@ function listItemGenerator ( list, item, bgColor ) {
     li.appendChild( buttonsWrapper );
 
     list.insertBefore( li, list.childNodes[ 0 ] );
-
-    listenAction( li );
-    listenEditItem( editButton );
-    listenDeleteItem( deleteButton );
 }
 
-function listenEditItem ( element ) {
-    element.addEventListener( 'click', e => {
-        const itemToEdit = element.closest( '.item' );
-        if ( element.closest( '.item' ).firstChild.contentEditable === 'false' ) {
-            element.closest( '.item' ).firstChild.contentEditable = 'true';
-            element.closest( '.item' ).firstChild.setAttribute( 'class', 'edit' );
-            e.target.textContent            = '\u2713';
-            element.nextSibling.textContent = '\u232B';
-        } else {
-            const storedData = Storage.get( CACHE_NAME );
-            const editedData = storedData.map( item => {
-                if ( itemToEdit.id === item.id ) {
-                    item.text = element.closest( '.item' ).firstChild.textContent;
-                }
-                return item;
-            } );
+function editCurrentNote ( e ) {
+    const currentNote    = e.target.closest( '.item' );
+    const buttonsWrapper = currentNote.querySelector( 'div' );
+    const textWrapper    = currentNote.firstChild;
 
-            Storage.set( CACHE_NAME, editedData );
-            element.closest( '.item' ).firstChild.contentEditable = 'false';
-            element.closest( '.item' ).firstChild.removeAttribute( 'class' );
-            e.target.textContent            = '\u270E';
-            element.nextSibling.textContent = '\u2715';
-        }
-        e.stopPropagation();
-    } );
-}
+    if ( e.target.tagName === 'BUTTON' ) {
 
-function listenDeleteItem ( element ) {
-    element.addEventListener( 'click', e => {
-        const itemToEdit = element.closest( '.item' );
+        if ( e.target.classList.contains( 'delete-btn' ) ) {
+            if ( textWrapper.contentEditable === 'true' ) {
+                const storedData = Storage.get( CACHE_NAME );
 
-        if ( element.closest( '.item' ).firstChild.contentEditable === 'true' ) {
-            const storedData = Storage.get( CACHE_NAME );
+                textWrapper.textContent     = storedData
+                    .filter( item => currentNote.id === item.id )[ 0 ].text;
+                textWrapper.contentEditable = 'false';
+                textWrapper.removeAttribute( 'class' );
+                e.target.textContent = '\u2715';
+                e.target.previousSibling.textContent = '\u270E';
 
-            element.closest( '.item' ).firstChild.textContent     = storedData
-                .filter( item => itemToEdit.id === item.id )[ 0 ].text;
-            element.closest( '.item' ).firstChild.contentEditable = 'false';
-            element.closest( '.item' ).firstChild.removeAttribute( 'class' );
-            element.textContent = '\u2715';
+            } else {
+                const storedData   = Storage.get( CACHE_NAME );
+                const filteredData = storedData.filter( item => item.id !== currentNote.id );
 
-        } else {
-            const itemToRemove = element.closest( '.item' );
-            const storedData   = Storage.get( CACHE_NAME );
-            const filteredData = storedData.filter( item => item.id !== itemToRemove.id );
+                Storage.set( CACHE_NAME, filteredData );
+                currentNote.remove();
 
-            Storage.set( CACHE_NAME, filteredData );
-            element.closest( '.item' ).remove();
-
-        }
-        e.stopPropagation();
-    } )
-    ;
-}
-
-function listenAction ( element ) {
-    element.addEventListener( 'click', e => {
-        if ( element.target === 'button' || element.firstChild.contentEditable === 'true' ) {
-            return;
+            }
         }
 
-        const child = element.querySelector( 'div' );
-        child.getAttribute( 'class' )
-            ? child.removeAttribute( 'class' )
-            : child.setAttribute( 'class', 'visible' );
-        e.stopPropagation();
-    } );
+        if ( e.target.classList.contains( 'edit-btn' ) ) {
+            if ( textWrapper.contentEditable === 'false' ) {
+                textWrapper.contentEditable = 'true';
+                textWrapper.setAttribute( 'class', 'edit' );
+                e.target.textContent             = '\u2713';
+                e.target.nextSibling.textContent = '\u232B';
+            } else {
+                const storedData = Storage.get( CACHE_NAME );
+                const editedData = storedData.map( item => {
+                    if ( currentNote.id === item.id ) {
+                        item.text = textWrapper.textContent;
+                    }
+                    return item;
+                } );
+
+                Storage.set( CACHE_NAME, editedData );
+                textWrapper.contentEditable = 'false';
+                textWrapper.removeAttribute( 'class' );
+                e.target.textContent             = '\u270E';
+                e.target.nextSibling.textContent = '\u2715';
+            }
+        }
+    }
+
+    if ( buttonsWrapper && textWrapper.getAttribute( 'class' ) !== 'edit' ) {
+        buttonsWrapper.getAttribute( 'class' )
+            ? buttonsWrapper.removeAttribute( 'class' )
+            : buttonsWrapper.setAttribute( 'class', 'visible' );
+    }
 }
