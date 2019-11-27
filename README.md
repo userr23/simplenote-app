@@ -6,7 +6,7 @@ An application to make simple notes and export them to PDF.
 
 ## Quick testing
 Use "Generate Test Note" button repeatedly to generate a lot of test notes.
-Then click the "Download as PDF" button to create and download the PDF file.
+Then click the "Export to PDF" button to create and download the PDF file.
 
 ## Features
 - Create custom note
@@ -22,7 +22,7 @@ Then click the "Download as PDF" button to create and download the PDF file.
 - [Primitive UI](https://github.com/taniarascia/primitive) - A minimalist front-end design toolkit built with Sass for developing responsive, browser-consistent web apps.
 - [jsPDF](https://github.com/MrRio/jsPDF) - A library to generate PDFs in JavaScript.
 
-##Author
+## Author
 - [Anton Safronov](https://github.com/userr23/)
 
 ## License
