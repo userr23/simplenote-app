@@ -134,7 +134,7 @@ function editCurrentNote ( e ) {
                     .filter( item => currentNote.id === item.id )[ 0 ].text;
                 textWrapper.contentEditable = 'false';
                 textWrapper.removeAttribute( 'class' );
-                e.target.textContent = '\u2715';
+                e.target.textContent                 = '\u2715';
                 e.target.previousSibling.textContent = '\u270E';
 
             } else {
